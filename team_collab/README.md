@@ -1,0 +1,64 @@
+# SyncSpace - FinTech Product Delivery Hub
+
+**SyncSpace** is a lightweight, ultra-fast, and deeply integrated team collaboration platform designed to bridge the gap between FinTech Business teams and Engineering.
+
+## Chosen Vertical
+**Product Delivery & Feature Launches (FinTech)**
+The standard agile workflow, tailored for finance. In FinTech, Business teams (like Product Managers) want to launch features quickly (e.g., "Instant Loans"), while Tech teams (Full-Stack Developers) need to ensure API security, database integrity, and clean code. 
+
+**Personas:**
+- **Persona A (Business)**: FinTech Product Manager. They care about timelines, market fit, and revenue impact.
+- **Persona B (Tech)**: Full-Stack Developer. They care about API limits, database schema, and clean, secure code.
+
+## Approach and Logic
+To meet the challenge criteria (specifically Efficiency and the strict <10 MB size limit), the application was architected entirely using **Vanilla JavaScript, HTML5, and CSS3**. 
+- By avoiding heavy build tools and `node_modules`, the codebase remains exceptionally clean and instantly executable in any browser without environment setup issues.
+- **Glassmorphism UI** and CSS Custom Properties (variables) create a stunning, accessible, and responsive user interface.
+- It dynamically falls back to a **Mock Mode** if Firebase credentials are not supplied, ensuring evaluators can still test the core logic and drag-and-drop capabilities.
+
+## How the Solution Works
+1. **Smart Assistant (AI Translation)**: The AI intercepts broad requests from the Product Manager and translates them into actionable technical sub-tasks for the developers (e.g., generating API endpoints and unit tests for decimal math).
+2. **State Management**: A centralized `STATE` object manages the application's data. DOM manipulation is decoupled from data logic, ensuring clean updates.
+3. **Real-time Synchronization**: Integrates deeply with **Google Gemini API** (Google Services Used requirement). The API is directly invoked from the browser to generate sub-tasks and answer queries based on the JSON state of the board.
+   - *Storage*: Uses native `localStorage`. The application instantly boots up, remembers tasks entirely offline, and requires zero cloud configuration for the database.
+4. **Drag & Drop**: Utilizes the native HTML5 Drag and Drop API to move task cards between columns, updating the underlying Firestore database on drop.
+
+## Meeting the Evaluation Criteria
+- **Code Quality**: Modular code structure (`app.js`, `firebase-config.js`), semantic HTML, and strict separation of concerns.
+- **Security**: Input is sanitized using an `escapeHTML` utility function to prevent XSS attacks when rendering task descriptions. Highly critical in FinTech.
+- **Efficiency**: Zero-dependency architecture. The entire project is less than 100 KB.
+- **Testing**: A custom Vanilla JS test runner is included (`test.html` / `tests.js`) to validate logic and data transformations.
+- **Accessibility**: High contrast colors, `aria-labels`, semantic tags (`<nav>`, `<main>`, `<aside>`), and keyboard-navigable elements.
+- **Google Services Used**: Google Gemini API via REST fetch for the Smart Assistant features.
+
+## Assumptions Made
+1. **Environment Variability**: Assuming the reviewer might not have Node.js or `npm` globally configured in their PATH, the app is built to run natively in the browser.
+2. **API Keys**: The app automatically uses a mock Gemini response if no key is provided. Evaluators can generate a free key at Google AI Studio and paste it directly on the login screen to unlock real AI without changing code.
+
+## Instructions: How to Run
+1. Clone the repository to your local machine.
+2. Open `index.html` directly in any modern web browser (Chrome, Edge, Firefox, Safari).
+   - *No build steps, databases to configure, or `npm install` required!*
+3. **Login**: Type any email and password and click Sign In to enter the board.
+4. **Google Services**: To unlock the real Gemini AI Assistant, paste your API key on the login screen.
+5. **Testing**: Open `test.html` in your browser to run the automated unit test suite.
+
+### Deployment: Google Cloud Run
+This project includes a `Dockerfile` and an `nginx` template specifically configured for Google Cloud Run's dynamic port assignments. 
+
+**Prerequisites:**
+- Have the [Google Cloud CLI (`gcloud`)](https://cloud.google.com/sdk/docs/install) installed.
+- Ensure billing is enabled for your Google Cloud Project.
+
+**Deploy Steps:**
+1. Open your terminal and navigate to the project directory.
+2. Authenticate with Google Cloud:
+   ```bash
+   gcloud auth login
+   gcloud config set project YOUR_PROJECT_ID
+   ```
+3. Deploy directly from the source code (Cloud Build will automatically detect the Dockerfile and containerize it):
+   ```bash
+   gcloud run deploy syncspace-app --source . --region us-central1 --allow-unauthenticated
+   ```
+4. Once finished, the terminal will output your live, scalable **Service URL**!
