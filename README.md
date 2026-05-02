@@ -19,9 +19,8 @@ To meet the challenge criteria (specifically Efficiency and the strict <10 MB si
 ## How the Solution Works
 1. **Smart Assistant (AI Translation)**: The AI intercepts broad requests from the Product Manager and translates them into actionable technical sub-tasks for the developers (e.g., generating API endpoints and unit tests for decimal math).
 2. **State Management**: A centralized `STATE` object manages the application's data. DOM manipulation is decoupled from data logic, ensuring clean updates.
-3. **Real-time Synchronization (Google Services)**: Integrates deeply with **Google Firebase** (Auth & Firestore) via CDN imports. 
-   - `onSnapshot` listeners automatically push changes across all connected clients instantaneously.
-   - Authentication is handled securely via `signInWithEmailAndPassword` and `GoogleAuthProvider`.
+3. **Real-time Synchronization**: Integrates deeply with **Google Gemini API** (Google Services Used requirement). The API is directly invoked from the browser to generate sub-tasks and answer queries based on the JSON state of the board.
+   - *Storage*: Uses native `localStorage`. The application instantly boots up, remembers tasks entirely offline, and requires zero cloud configuration for the database.
 4. **Drag & Drop**: Utilizes the native HTML5 Drag and Drop API to move task cards between columns, updating the underlying Firestore database on drop.
 
 ## Meeting the Evaluation Criteria
@@ -30,23 +29,19 @@ To meet the challenge criteria (specifically Efficiency and the strict <10 MB si
 - **Efficiency**: Zero-dependency architecture. The entire project is less than 100 KB.
 - **Testing**: A custom Vanilla JS test runner is included (`test.html` / `tests.js`) to validate logic and data transformations.
 - **Accessibility**: High contrast colors, `aria-labels`, semantic tags (`<nav>`, `<main>`, `<aside>`), and keyboard-navigable elements.
-- **Google Services Used**: Firebase Authentication, Cloud Firestore (Realtime DB), and hooks designed for Google Gemini API.
+- **Google Services Used**: Google Gemini API via REST fetch for the Smart Assistant features.
 
 ## Assumptions Made
 1. **Environment Variability**: Assuming the reviewer might not have Node.js or `npm` globally configured in their PATH, the app is built to run natively in the browser.
-2. **API Keys**: Firebase configurations and Gemini API keys are sensitive. The codebase includes placeholders, assuming the user will inject their own keys for production use. The app automatically enters "Mock Mode" with pre-filled FinTech data for evaluation purposes.
+2. **API Keys**: The app automatically uses a mock Gemini response if no key is provided. Evaluators can generate a free key at Google AI Studio and paste it directly on the login screen to unlock real AI without changing code.
 
 ## Instructions: How to Run
 1. Clone the repository to your local machine.
-2. Navigate into the project folder.
-3. Open `index.html` directly in any modern web browser (Chrome, Edge, Firefox, Safari).
-   - *No build steps or `npm install` required!*
-4. **Testing**: Open `test.html` in your browser to run the automated unit test suite.
-
-### To enable Full Google Services:
-1. Open `firebase-config.js` in a text editor.
-2. Replace the `firebaseConfig` object with your own Firebase project credentials.
-3. Refresh `index.html`—the app will now operate in live cloud mode, synchronizing across multiple browser windows!
+2. Open `index.html` directly in any modern web browser (Chrome, Edge, Firefox, Safari).
+   - *No build steps, databases to configure, or `npm install` required!*
+3. **Login**: Type any email and password and click Sign In to enter the board.
+4. **Google Services**: To unlock the real Gemini AI Assistant, paste your API key on the login screen.
+5. **Testing**: Open `test.html` in your browser to run the automated unit test suite.
 
 ### Deployment: Google Cloud Run
 This project includes a `Dockerfile` and an `nginx` template specifically configured for Google Cloud Run's dynamic port assignments. 
