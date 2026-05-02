@@ -47,3 +47,23 @@ To meet the challenge criteria (specifically Efficiency and the strict <10 MB si
 1. Open `firebase-config.js` in a text editor.
 2. Replace the `firebaseConfig` object with your own Firebase project credentials.
 3. Refresh `index.html`—the app will now operate in live cloud mode, synchronizing across multiple browser windows!
+
+### Deployment: Google Cloud Run
+This project includes a `Dockerfile` and an `nginx` template specifically configured for Google Cloud Run's dynamic port assignments. 
+
+**Prerequisites:**
+- Have the [Google Cloud CLI (`gcloud`)](https://cloud.google.com/sdk/docs/install) installed.
+- Ensure billing is enabled for your Google Cloud Project.
+
+**Deploy Steps:**
+1. Open your terminal and navigate to the project directory.
+2. Authenticate with Google Cloud:
+   ```bash
+   gcloud auth login
+   gcloud config set project YOUR_PROJECT_ID
+   ```
+3. Deploy directly from the source code (Cloud Build will automatically detect the Dockerfile and containerize it):
+   ```bash
+   gcloud run deploy syncspace-app --source . --region us-central1 --allow-unauthenticated
+   ```
+4. Once finished, the terminal will output your live, scalable **Service URL**!
